@@ -1182,11 +1182,15 @@ SC.CoreView.reopen(
     }
 
     attrs.owner = attrs.parentView = this ;
-    attrs.isVisibleInWindow = this.get('isVisibleInWindow');
     if (!attrs.page) { attrs.page = this.page ; }
 
     // Now add this to the attributes and create.
     if (view.isClass) { view = view.create(attrs); }
+
+    if (view.hasVisibility) {
+      view.set('isVisibleInWindow', this.get('isVisibleInWindow'));
+    }
+
     return view ;
   },
 
@@ -1221,8 +1225,7 @@ SC.CoreView.reopen(
     @returns YES if the contextmenu can show up
   */
   contextMenu: function(evt) {
-    if(!this.get('isContextMenuEnabled')) evt.stop();
-    return true;
+    if (this.get('isContextMenuEnabled')) { return YES; }
   }
 
 });
