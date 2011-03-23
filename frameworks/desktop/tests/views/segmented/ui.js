@@ -152,7 +152,7 @@ var pane;
       itemTitleKey: 'value',
       itemValueKey: 'value',
       itemWidthKey: 'width',
-      value: "D",
+      value: "E",
       layout: { height: 25 }
     })
     .add("aria-role_tab,tablist", SC.SegmentedView, {
@@ -166,12 +166,11 @@ var pane;
     })
     .add("aria-labelledby", SC.SegmentedView, {
       items: [
-      {title: "Item 1", ariaLabeledBy: "item1"},
-      {title: "Item 2", ariaLabeledBy: "item2"},
-      {title: "Item 3", ariaLabeledBy: "item3"}
+      {title: "Item 1"},
+      {title: "Item 2"},
+      {title: "Item 3"}
       ],
       itemTitleKey: "title",
-      itemAriaLabeledByKey: "ariaLabeledBy",
       layout: { height: 25 }
     });
 
@@ -229,8 +228,8 @@ var pane;
       if(i===seglen-1){
         ok((seg.className.indexOf('sc-last-segment')>=0), 'last segment has the right classname assigned.');
       }
-      ok((seg.childNodes[0].className.indexOf('sc-button-inner')>=0), 'segment '+i+' should have an inner-button.');
-      ok((seg.childNodes[0].childNodes[0].className.indexOf('sc-button-label')>=0), 'segment '+i+' should have a label.');
+
+      ok((seg.childNodes[3].className.indexOf('sc-button-label')>=0), 'segment '+i+' should have a label.');
 
       if(i !== 0 && i < seglen-1) {
         ok((seg.className.indexOf('sc-middle-segment')>=0), 'middle segments have the right classname assigned.');
@@ -258,9 +257,8 @@ var pane;
       if(i==seglen-1){
         ok((seg.className.indexOf('sc-last-segment')>=0), 'last segment has the right classname assigned.');
       }
-      ok((seg.childNodes[0].className.indexOf('sc-button-inner')>=0), 'segment '+i+' should have an inner-button.');
-      ok((seg.childNodes[0].childNodes[0].className.indexOf('sc-button-label')>=0), 'segment '+i+' should have a label.');
-      ok((seg.childNodes[0].childNodes[0].childNodes[0].src.length>0), 'segment '+i+' should have an icon.');
+      ok((seg.childNodes[3].className.indexOf('sc-button-label')>=0), 'segment '+i+' should have a label.');
+      ok((seg.childNodes[3].childNodes[0].src.length>0), 'segment '+i+' should have an icon.');
 
       if(i!==0 && i!=seglen-1){
         ok((seg.className.indexOf('sc-middle-segment')>=0), 'middle segments have the right classname assigned.');
@@ -386,7 +384,9 @@ var pane;
 
     // check that the overflowed items are stored
     var overflowItems = sv.overflowItems;
-    equals(overflowItems.length, 2, "there should be 2 overflowed items");
+
+    // five items, 70px wide, and a 342px wide container means 1 overflow.
+    equals(overflowItems.length, 1, "there should be 2 overflowed items");
 
     // 1. remove the last two items (the last item should no longer be an overflow segment)
     var items = sv.get('items');
@@ -444,13 +444,13 @@ var pane;
   test("Check that the segments have aria-labelled attribute set", function() {
     var sv = pane.view('aria-labelledby'),
         segments = sv.get('childViews'),
-        i, len, segmentViewElem, ariaLabeledBy, aria_labelledby;
+        i, len, segmentViewElem, aria_labelledby, label;
 
     for(i = 0, len = segments.length; i<len; ++i) {
-      ariaLabeledBy   = segments[i].get('ariaLabeledBy');
       segmentViewElem = segments[i].$();
-      aria_labelledby = segmentViewElem.attr('aria-labelledby');
-      equals(aria_labelledby, ariaLabeledBy, "segment " + (i+1) + " has aria-labeledby set");
+      label = segments[i].$('label.sc-button-label')[0];
+      aria_labelledby = document.getElementById(segmentViewElem.attr('aria-labelledby'));
+      equals(aria_labelledby, label, "segment " + (i+1) + " has aria-labeledby pointing at button label");
     }
   });
 

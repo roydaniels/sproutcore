@@ -29,27 +29,26 @@ SC.BaseTheme.checkboxRenderDelegate = SC.RenderDelegate.create({
   name: 'checkbox',
   
   render: function(dataSource, context) {
-    var theme = dataSource.get('theme'),
-        view  = dataSource.get('view'),
-        ariaLabel,ariaLabeledBy;
+    this.addSizeClassName(dataSource, context);
 
-    if(view) {
-      ariaLabel     = view.get('ariaLabel');
-      ariaLabeledBy = view.get('ariaLabeledBy');
-    }
+    var theme = dataSource.get('theme'),
+        ariaLabel, labelId;
+
+    // the label id is used so we can set the aria labelledby attribute
+    labelId = SC.guidFor(dataSource) + "-label";
 
     var isSelected = dataSource.get('isSelected') || NO;
     var isActive = dataSource.get('isActive');
     var isDisabled = !dataSource.get('isEnabled');
 
+    var ariaIsSelected;
+    if (isSelected === SC.MIXED_STATE) ariaIsSelected = 'mixed';
+    else if (isSelected) ariaIsSelected = 'true';
+    else ariaIsSelected = 'false';
+
     context.attr('role', 'checkbox');
-    context.attr('aria-checked', isSelected.toString());
-    if(ariaLabeledBy && ariaLabeledBy !== "") {
-      context.attr('aria-labelledby', ariaLabeledBy);
-    }
-    if(ariaLabel && ariaLabel !== "") {
-      context.attr('aria-label', ariaLabel);
-    }
+    context.attr('aria-checked', ariaIsSelected);
+    context.attr('aria-labelledby', labelId);
 
     context.setClass({
       'sel': isSelected,
@@ -59,36 +58,33 @@ SC.BaseTheme.checkboxRenderDelegate = SC.RenderDelegate.create({
     
     context.push('<span class = "button"></span>');
     
-    context = context.begin('span').addClass('label');
+    context = context.begin('span').addClass('label').id(labelId);
     theme.labelRenderDelegate.render(dataSource, context);
     context = context.end();
   },
   
   update: function(dataSource, jquery) {
-    var theme = dataSource.get('theme'),
-        view  = dataSource.get('view'),
-        ariaLabel,ariaLabeledBy;
+    this.updateSizeClassName(dataSource, jquery);
 
-    if(view) {
-      ariaLabel     = view.get('ariaLabel');
-      ariaLabeledBy = view.get('ariaLabeledBy');
-    }
+    var theme = dataSource.get('theme');
 
     var isSelected = dataSource.get('isSelected');
     var isActive = dataSource.get('isActive');
     var isDisabled = !dataSource.get('isEnabled');
 
+    var ariaIsSelected;
+    if (isSelected === SC.MIXED_STATE) ariaIsSelected = 'mixed';
+    else if (isSelected) ariaIsSelected = 'true';
+    else ariaIsSelected = 'false';
+
     // address accessibility
-    jquery.attr('aria-checked', isSelected.toString());
-    if(ariaLabeledBy && ariaLabeledBy !== "") {
-      jquery.attr('aria-labelledby', ariaLabeledBy);
-    }
-    if(ariaLabel && ariaLabel !== "") {
-      jquery.attr('aria-label', ariaLabel);
-    }
+    jquery.attr('aria-checked', ariaIsSelected);
+
+    // NOTE: the other properties were already set in render, and should not
+    // need to be changed.
 
     theme.labelRenderDelegate.update(dataSource, jquery.find('span.label'));
-    
+
     // add class names
     jquery.setClass({
       'sel': isSelected,
@@ -97,4 +93,5 @@ SC.BaseTheme.checkboxRenderDelegate = SC.RenderDelegate.create({
     });
   }
 });
+
 

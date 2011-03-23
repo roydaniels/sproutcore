@@ -42,6 +42,8 @@
 SC.SegmentedView = SC.View.extend(SC.Control,
 /** @scope SC.SegmentedView.prototype */ {
 
+  ariaRole: 'tablist',
+
   classNames: ['sc-segmented-view'],
 
   theme: 'square',

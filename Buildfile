@@ -56,7 +56,7 @@ config :forms, :required => :desktop
 
 # SPECIAL FRAMEWORKS AND THEMES
 # These do not require any of the built-in SproutCore frameworks
-%w(testing debug standard_theme empty_theme).each do |target_name|
+%w(testing debug legacy_theme empty_theme).each do |target_name|
   config target_name, 
     :required => [], :test_required => [], :debug_required => []
 end
@@ -73,7 +73,7 @@ config :iphone_theme,
   :test_required  => ['sproutcore/testing'],
   :debug_required => ['sproutcore/debug']
 
-config :standard_theme, 
+config :legacy_theme, 
   :required => :empty_theme, 
   :theme_name => 'sc-theme',
   :test_required  => ['sproutcore/testing'],
@@ -87,7 +87,10 @@ config :ace,
   :css_theme => 'ace'
 
 # CONFIGURE APPS
-config :core_tools, :required => [:desktop, :datastore, :animation, :forms]
+config :core_tools, :required => [
+  :desktop, :datastore, :animation, :forms,
+  "sproutcore/ace", "sproutcore/experimental/split_view"
+]
 
 # mode :debug do
 #   config :core_tools, :combine_javascript => false
@@ -103,8 +106,6 @@ config :core_tools, :required => [:desktop, :datastore, :animation, :forms]
   # end
 
 end
-
-config :test_controls, :css_theme => 'ace.test-controls'
 
 config :greenhouse, 
   :required => [:sproutcore, :'sproutcore/designer', :statechart],

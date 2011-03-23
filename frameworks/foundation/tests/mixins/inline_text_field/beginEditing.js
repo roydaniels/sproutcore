@@ -25,6 +25,8 @@ pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
     editor = pane._pane.childViews[length - 1];
 
     ok(!editor.get('isFirstResponder'), "should not be first responder yet");
+
+    sc_super();
   },
 
   inlineEditorDidBeginEditing: function(inlineEditor) {
@@ -35,6 +37,8 @@ pane = SC.ControlTestPane.design().add("label1", SC.LabelView, {
     editor = pane._pane.childViews[length - 1];
 
     ok(editor.get('isFirstResponder'), "should be first responder now");
+
+    sc_super();
   }
 }).add("label2", SC.LabelView, {
   value: 'Can\'t Touch This',
@@ -53,7 +57,7 @@ pane.resetView = function(view) {
 
 optionsForLabelFromView = function(view) {
   var el = view.$(),
-  f = SC.viewportOffset(el[0]),
+  f = SC.offset(el[0]),
   frameTemp = view.convertFrameFromView(view.get('frame'), null);
 
   f.width = frameTemp.width;
@@ -116,24 +120,21 @@ test("fails when required options are missing",
 function() {
   try {
     optionsForLabel1["frame"] = null;
-    SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if frame missing");
+    ok(SC.InlineTextFieldView.beginEditing(optionsForLabel1) === NO, "should fail if frame missing");
   } catch(e1) {
     ok(YES, "should fail if frame missing: %@".fmt(e1));
   }
 
   try {
     optionsForLabel1["delegate"] = null;
-    SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if delegate missing");
+    ok(SC.InlineTextFieldView.beginEditing(optionsForLabel1) === NO, "should fail if delegate missing");
   } catch(e2) {
     ok(YES, "should fail if delegate missing: %@".fmt(e2));
   }
 
   try {
     optionsForLabel1["exampleElement"] = null;
-    SC.InlineTextFieldView.beginEditing(optionsForLabel1);
-    ok(NO, "should fail if exampleElement missing");
+    ok(SC.InlineTextFieldView.beginEditing(optionsForLabel1) === NO, "should fail if exampleElement missing");
   } catch(e3) {
     ok(YES, "should fail if exampleElement missing: %@".fmt(e3));
   }
@@ -220,7 +221,7 @@ function() {
 
 test("inline editor does not display the defaultValue if the label's value is the number 0",
 function() {
-  var view1 = pane.view('label1');;
+  var view1 = pane.view('label1');
   view1.set('value', 0);
   optionsForLabel1 = optionsForLabelFromView(view1);
 

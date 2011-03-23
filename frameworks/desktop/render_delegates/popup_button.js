@@ -5,16 +5,16 @@
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
-SC.AceTheme.panelRenderDelegate = SC.RenderDelegate.create({
-  name: 'panel',
-  
+/**
+ * Renders and updates the HTML representation of a popup button.
+ */
+SC.BaseTheme.popupButtonRenderDelegate = SC.RenderDelegate.create({
   render: function(dataSource, context) {
-    context = context.begin('div').addClass('panel-background');
-    this.includeSlices(dataSource, context, SC.NINE_SLICE);
-    context = context.end();
+    context.attr('aria-haspopup', 'true');
+    dataSource.get('theme').buttonRenderDelegate.render(dataSource, context);
   },
-  
-  update: function() {
-    // doesn't get updated
+
+  update: function(dataSource, jQuery) {
+    dataSource.get('theme').buttonRenderDelegate.update(dataSource, jQuery);
   }
 });

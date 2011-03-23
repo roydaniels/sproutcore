@@ -10,6 +10,7 @@
   SC.SegmentedView.
 */
 SC.BaseTheme.segmentRenderDelegate = SC.Object.create({
+  name: 'segment',
 
   render: function(dataSource, context) {
     var theme = dataSource.get('theme'),
@@ -23,6 +24,7 @@ SC.BaseTheme.segmentRenderDelegate = SC.Object.create({
       'sc-last-segment': dataSource.get('isLastSegment'),
       'sc-overflow-segment': dataSource.get('isOverflowSegment')
     };
+
     if (!SC.none(dataSource.get('index'))) classes['sc-segment-' + dataSource.get('index')] = YES;
     context.setClass(classes);
 

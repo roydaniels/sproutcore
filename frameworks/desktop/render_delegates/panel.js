@@ -7,22 +7,21 @@
 
 SC.BaseTheme.panelRenderDelegate = SC.RenderDelegate.create({
   name: 'panel',
-
-  render: function(dataSource, context) {
-    context.push(
-      "<div class='middle'></div>",
-      "<div class='top-left-edge'></div>",
-      "<div class='top-edge'></div>",
-      "<div class='top-right-edge'></div>",
-      "<div class='right-edge'></div>",
-      "<div class='bottom-right-edge'></div>",
-      "<div class='bottom-edge'></div>",
-      "<div class='bottom-left-edge'></div>",
-      "<div class='left-edge'></div>"
-    );
-  },
   
-  update: function() {
-    // We never update child views. They get to do that on their own.
+  render: function(dataSource, context) {
+    context = context.begin('div').addClass('panel-background');
+    this.includeSlices(dataSource, context, SC.NINE_SLICE);
+    context = context.end();
+
+    // the label for the panel could change...
+    var ariaLabel = dataSource.get('ariaLabel');
+    context.attr('aria-label', ariaLabel || '');
+  },
+
+  update: function(dataSource, jQuery) {
+    // the label for the panel could change...
+    var ariaLabel = dataSource.get('ariaLabel');
+    jQuery.attr('aria-label', ariaLabel || '');
+
   }
 });

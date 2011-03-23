@@ -13,7 +13,15 @@ sc_require('system/event') ;
 
 SC.mixin({
   isReady: NO,
-
+  
+  /**
+    Allows apps to avoid automatically attach the ready handlers if they
+    want to by setting this flag to YES
+    
+    @property {Boolean}
+  */
+  ignoreReady: SC.ignoreReady ? YES : NO,
+  
   /**
     Add the passed target and method to the queue of methods to invoke when
     the document is ready.  These methods will be called after the document
@@ -29,8 +37,8 @@ SC.mixin({
     @returns {SC}
   */
   ready: function(target, method) {
-    var queue = this._readyQueue;
-
+    var queue = SC._readyQueue;
+    
     // normalize
     if (method === undefined) {
       method = target; target = null ;
@@ -38,8 +46,14 @@ SC.mixin({
       method = target[method] ;
     }
 
-    jQuery(document).ready(function() { method.call(target); });
-
+    if(SC.isReady) {
+      jQuery(document).ready(function() { method.call(target); });
+    }
+    else {
+      if(!queue) SC._readyQueue = [];
+      SC._readyQueue.push(function() { method.call(target); });
+    }
+    
     return this ;
   },
 
@@ -55,18 +69,33 @@ SC.mixin({
       jQuery("#loading").remove();
     },
     done: function() {
+      if(SC.isReady) return;
+      
       SC.isReady = true;
-      if(window.main && !SC.suppressMain && (SC.mode === SC.APP_MODE)) { main(); }
+      
+      var queue = SC._readyQueue, idx, len;
+      
+      if(queue) {
+        for(idx=0,len=queue.length;idx<len;idx++) {
+          queue[idx].call();
+        }
+        SC._readyQueue = null;
+      }
+      
+      if(window.main && !SC.suppressMain) { main(); }
       SC.RunLoop.end();
     }
   }
 
 }) ;
 
-jQuery(document)
-  .ready(SC.onReady.startRunLoop)
-  .ready(SC.onReady.setupLocales)
-  .ready(SC.onReady.removeLoading);
+//
+if(!SC.ignoreReady) {
+  jQuery(document)
+    .ready(SC.onReady.startRunLoop)
+    .ready(SC.onReady.setupLocales)
+    .ready(SC.onReady.removeLoading);
+}
 jQuery.event.special.ready._default = SC.onReady.done;
 
 SC.removeLoading = YES;
