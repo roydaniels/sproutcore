@@ -12,6 +12,12 @@ SC.TextFieldSupport = {
   didCreateLayer: function() {
     SC.Event.add(this.$('input'), 'focus', this, this.focusIn);
     SC.Event.add(this.$('input'), 'blur', this, this.focusOut);
+    
+    this.$('input').change(jQuery.proxy(function() {
+      SC.RunLoop.begin();
+      this.notifyPropertyChange('value');
+      SC.RunLoop.end();
+    }, this));
   },
 
   focusIn: function(event) {
