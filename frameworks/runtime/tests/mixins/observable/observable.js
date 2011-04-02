@@ -1,3 +1,9 @@
+// ==========================================================================
+// Project:   SproutCore - JavaScript Application Framework
+// Copyright: ©2006-2011 Strobe Inc. and contributors.
+//            ©2008-2011 Apple Inc. All rights reserved.
+// License:   Licensed under MIT license (see license.js)
+// ==========================================================================
 // ========================================================================
 // SC.Observable Tests
 // ========================================================================
@@ -130,6 +136,56 @@ test("should work when object is SC (used in SC.objectForPropertyPath)", functio
   equals(SC.objectForPropertyPath('SC.RunLoop'), SC.RunLoop);
   equals(SC.get('RunLoop'), SC.RunLoop);
   equals(SC.get(SC, 'RunLoop'), SC.RunLoop);
+});
+
+module("SC.getPath()");
+
+test("should return a property at a given path relative to the window", function() {
+  window.Foo = SC.Object.create({
+    Bar: SC.Object.create({
+      Baz: function() { return "blargh"; }.property()
+    })
+  });
+
+  try {
+    equals(SC.getPath('Foo.Bar.Baz'), "blargh");
+  } finally {
+    delete window.Foo;
+  }
+});
+
+test("should return a property at a given path relative to the passed object", function() {
+  var foo = SC.Object.create({
+    bar: SC.Object.create({
+      baz: function() { return "blargh"; }.property()
+    })
+  });
+
+  equals(SC.getPath(foo, 'bar.baz'), "blargh");
+});
+
+test("should return a property at a given path relative to the window - JavaScript hash", function() {
+  window.Foo = {
+    Bar: {
+      Baz: "blargh"
+    }
+  };
+
+  try {
+    equals(SC.getPath('Foo.Bar.Baz'), "blargh");
+  } finally {
+    delete window.Foo;
+  }
+});
+
+test("should return a property at a given path relative to the passed object - JavaScript hash", function() {
+  var foo = {
+    bar: {
+      baz: "blargh"
+    }
+  };
+
+  equals(SC.getPath(foo, 'bar.baz'), "blargh");
 });
 
 // ..........................................................
@@ -445,6 +501,85 @@ test("dependent keys should be able to be specified as property paths", function
   equals(depObj.get('menuPrice'), 6, "cache is properly invalidated after nested property changes");
 });
 
+test("nested dependent keys should propagate after they update", function() {
+  window.DepObj = SC.Object.create({
+    restaurant: SC.Object.create({
+      menu: SC.Object.create({
+        price: 5
+      })
+    }),
+
+    price: function() {
+      return this.getPath('restaurant.menu.price');
+    }.property('restaurant.menu.price')
+  });
+
+  var bindObj = SC.Object.create({
+    priceBinding: "DepObj.price"
+  });
+
+  SC.run();
+
+  equals(bindObj.get('price'), 5, "precond - binding propagates");
+
+  DepObj.setPath('restaurant.menu.price', 10);
+
+  SC.run();
+
+  equals(bindObj.get('price'), 10, "binding propagates after a nested dependent keys updates");
+
+  DepObj.setPath('restaurant.menu', SC.Object.create({
+    price: 15
+  }));
+
+  SC.run();
+
+  equals(bindObj.get('price'), 15, "binding propagates after a middle dependent keys updates");
+});
+
+test("cacheable nested dependent keys should clear after their dependencies update", function() {
+  window.DepObj = SC.Object.create({
+    restaurant: SC.Object.create({
+      menu: SC.Object.create({
+        price: 5
+      })
+    }),
+
+    price: function() {
+      return this.getPath('restaurant.menu.price');
+    }.property('restaurant.menu.price').cacheable()
+  });
+
+  SC.run();
+
+  equals(DepObj.get('price'), 5, "precond - computed property is correct");
+
+  DepObj.setPath('restaurant.menu.price', 10);
+
+  equals(DepObj.get('price'), 10, "cacheable computed properties are invalidated even if no run loop occurred");
+  DepObj.setPath('restaurant.menu.price', 20);
+
+  equals(DepObj.get('price'), 20, "cacheable computed properties are invalidated after a second get before a run loop");
+
+  SC.run();
+
+  equals(DepObj.get('price'), 20, "precond - computed properties remain correct after a run loop");
+
+  DepObj.setPath('restaurant.menu', SC.Object.create({
+    price: 15
+  }));
+
+  equals(DepObj.get('price'), 15, "cacheable computed properties are invalidated after a middle property changes");
+
+  DepObj.setPath('restaurant.menu', SC.Object.create({
+    price: 25
+  }));
+
+  equals(DepObj.get('price'), 25, "cacheable computed properties are invalidated after a middle property changes again, before a run loop");
+});
+
+
+
 // ..........................................................
 // OBSERVABLE OBJECTS
 //
@@ -611,7 +746,7 @@ module("object.removeObserver()", {
         // Just an observer
         console.log("observer!");
       },
-      observer2: function() { 
+      observer2: function() {
         console.log("observer2!");
         this.removeObserver('observableValue', null, 'observer1');
         this.removeObserver('observableValue', null, 'observer2');
@@ -620,7 +755,7 @@ module("object.removeObserver()", {
       },
       observer3: function() {
         // Just an observer
-        console.log("observer3!");        
+        console.log("observer3!");
       }
     });
 
@@ -665,7 +800,7 @@ test("removing an observer inside of an observer shouldn’t cause any problems"
   catch(e) {
     encounteredError = YES;
   }
-  equals(encounteredError, NO);  
+  equals(encounteredError, NO);
 });
 
 

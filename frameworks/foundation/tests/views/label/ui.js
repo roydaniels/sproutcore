@@ -1,7 +1,7 @@
 // ==========================================================================
 // Project:   SproutCore - JavaScript Application Framework
 // Copyright: ©2006-2011 Strobe Inc. and contributors.
-//            portions copyright @2009 Apple Inc.
+//            portions copyright @2011 Apple Inc.
 // License:   Licensed under MIT license (see license.js)
 // ==========================================================================
 
@@ -161,11 +161,6 @@ test("Check that the title is set or not and if it is in the appropriate element
   viewElem=pane.view('centered,icon').$('img');
   ok((viewElem!==null), 'should have an image corresponding to an icon');
 
-});
-
-test("Check that the aria-labelledby is set to Label View", function() {
-  var viewElem=pane.view('aria-labelledby').$();
-  equals(viewElem.attr('aria-labelledby'), 'Label View', 'should have value set to Label view');
 });
 
 })();
