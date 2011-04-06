@@ -1,4 +1,4 @@
-sc_require('extensions');
+sc_require('ext/handlebars');
 
 SC.Handlebars.ViewHelper = SC.Object.create({
   helper: function(thisContext, path, options) {
@@ -27,6 +27,8 @@ SC.Handlebars.ViewHelper = SC.Object.create({
       }
       if (!newView) { throw "Unable to find view at path '" + path + "'"; }
     }
+
+    if (hash.id) hash.layerId = hash.id;
 
     var contextOptions = {
       'id': hash.id,
