@@ -11,7 +11,7 @@ sc_require('system/cursor');
 sc_require('system/responder') ;
 sc_require('system/theme');
 
-sc_require('mixins/string') ;
+sc_require('system/string') ;
 sc_require('views/view/base') ;
 
 
@@ -696,6 +696,8 @@ SC.CoreView.reopen(
       view.renderToContext(context, firstTime);
       context = context.end() ;
     }
+    this._didRenderChildViews = YES;
+
     return context;
   },
 
