@@ -1,6 +1,51 @@
 
+CHANGE LOG FOR 1.6
+==================
+
+1.6.0.beta.3
+------------
+* Removed stray debugger statement that broke sc-build
+
+
+1.6.0.beta.2
+------------
+* Allow native touch scrolling inside an SC.TemplatePane.
+* Add SC.Button template control.
+* Created SC.TextField and SC.Checkbox views to eventually replace the *Support mixins.
+
+
+1.6.0.beta.1
+------------
+* Bugfixes to synchronization between SproutCore RecordArray/ManyArray/ChildArray and TemplateCollectionView
+* Moved forms to experimental framework
+* Moved routing into its own framework
+* Improved ability to use table elements in Handlebars templates
+* CSS and cross-browser fixes for built-in controls
+* Significantly cleaned up in-line documentation
+
+
 CHANGE LOG FOR 1.5
 ==================
+
+Upcoming
+-----
+
+* Added ability to opt out of custom headers when making AJAX requests
+* Allow multiple listeners per single response status
+* Fixes for making panes properly handle first responder
+* General CSS Cleanup throughout
+* Add support for trim and loc back to string.js
+* Bug fixes for IE7/8/9 support 
+* Fixed unit tests for IE
+* Added unit tests for keyboard focus functionality
+* Fix keyboard focus issues in the view layer
+* Updated the styling of list views
+* Fixed bugs with flowed_layout and auto_resize
+* Small documentation fixes throughout
+* Bug fixes for statecharts for IE support
+* Improving the performance of the unit test runner
+* Updated index.html for the latest versions of IE
+
 
 1.5.0
 -----

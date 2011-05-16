@@ -410,6 +410,7 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
   _scac_arrayContentDidChange: function(start, removed, added) {
     this.arrayContentDidChange(start, removed, added);
     var addedObjects = this.slice(start, start+added);
+    this._scac_cached = NO;
     this.setupEnumerablePropertyChains(addedObjects);
     this.updateSelectionAfterContentChange();
   },
@@ -447,6 +448,8 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
       }
 
       lastContent.removeObserver('status', this, sfunc);
+
+      this.teardownEnumerablePropertyChains(lastContent);
     }
 
     // save new cached values
@@ -479,6 +482,8 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
       // Observer for changes to the status property, in case this is an
       // SC.Record or SC.RecordArray.
       content.addObserver('status', this, sfunc);
+
+      this.setupEnumerablePropertyChains(content);
     } else {
       newlen = SC.none(content) ? 0 : 1;
     }
@@ -486,26 +491,10 @@ SC.ArrayController = SC.Controller.extend(SC.Array, SC.SelectionSupport,
     // finally, notify enumerable content has changed.
     this._scac_length = newlen;
     this._scac_contentStatusDidChange();
+
     this.arrayContentDidChange(0, 0, newlen);
     this.updateSelectionAfterContentChange();
   }.observes('content'),
-
-  /**
-    @private
-
-    Forward enumerable content observer notifications to enumerable observers
-    on the array controller.
-
-    Since our content may be bound to another object, and that binding will not
-    update until the end of the run loop, we buffer up all enumerable changes
-    and play them back at the end of the run loop, once bindings have fired.
-
-    @param {Array} addedObjects the array of objects that were added
-    @param {Array} removedObject the array of objects that were removed
-    @param {Number} start the index at which the positions occurred
-  */
-  _scac_enumerableContentDidChange: function(addedObjects, removedObjects, start) {
-  },
 
   /** @private
     Whenever enumerable content changes, need to regenerate the
