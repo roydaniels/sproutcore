@@ -62,7 +62,7 @@ sc_require('system/state');
   
   If you liked to specify a class that should be used as the root state but using the above method to defined
   states, you can set the rootStateExample property with a class that extends from SC.State. If the 
-  rootStateExaple property is not explicitly assigned the then default class used will be SC.State.
+  rootStateExample property is not explicitly assigned the then default class used will be SC.State.
   
   To provide your statechart with orthogonality, you use concurrent states. If you use concurrent states,
   then your statechart will have multiple current states. That is because each concurrent state represents an
@@ -590,6 +590,8 @@ SC.StatechartManager = /** @scope SC.StatechartManager.prototype */{
       // No explicit current state to start from; therefore, just use the first current state as 
       // a default, if there is a current state.
       fromCurrentState = this.get('currentStates')[0];
+      msg = "gotoState: fromCurrentState not explicitly provided. Using a default current state to transition from: %@";
+      this.statechartLogWarning(msg.fmt(fromCurrentState));
     }
         
     if (trace) {

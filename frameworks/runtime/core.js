@@ -29,6 +29,9 @@ if (typeof console === 'undefined') {
   console.log = console.info = console.warn = console.error = function(){};
 }
 
+window.SC = window.SC || {} ;
+window.SproutCore = window.SproutCore || SC ;
+
 // ........................................
 // BOOTSTRAP
 //
@@ -36,7 +39,7 @@ if (typeof console === 'undefined') {
 // rest of the methods go into the mixin defined below.
 
 /**
-  @version 1.6.0.beta.3
+  @version 1.6.0.rc.2
   @namespace
 
   All SproutCore methods and functions are defined
@@ -54,10 +57,9 @@ if (typeof console === 'undefined') {
   The core Base framework is based on the jQuery API with a number of
   performance optimizations.
 */
-window.SC = window.SC || {} ;
-window.SproutCore = window.SproutCore || SC ;
+SC = window.SC; // This is dumb but necessary for jsdoc to get it right
 
-SC.VERSION = '1.6.0.beta.3';
+SC.VERSION = '1.6.0.rc.2';
 
 /**
   @private
@@ -187,7 +189,8 @@ SC.mixin(/** @scope window.SC.prototype */ {
             SC.T_ARRAY: An instance of Array,<br>
             SC.T_CLASS: A SproutCore class (created using SC.Object.extend()),<br>
             SC.T_OBJECT: A SproutCore object instance,<br>
-            SC.T_HASH: A JavaScript object not inheriting from SC.Object
+            SC.T_HASH: A JavaScript object not inheriting from SC.Object, <br>
+            SC.T_ERROR: A SproutCore SC.Error object <br>
   */
   typeOf: function(item) {
     if (item === undefined) return SC.T_UNDEFINED ;
@@ -198,16 +201,21 @@ SC.mixin(/** @scope window.SC.prototype */ {
     if (nativeType === "function") {
       return item.isClass ? SC.T_CLASS : SC.T_FUNCTION;
     } else if (nativeType === "object") {
-      if (item.isError) {
-        return SC.T_ERROR ;
-      } else if (item.isObject) {
-        return SC.T_OBJECT ;
+      
+      // Note: typeOf() may be called before SC.Error has had a chance to load
+      // so this code checks for the presence of SC.Error first just to make
+      // sure.  No error instance can exist before the class loads anyway so
+      // this is safe.
+      if (SC.Error && (item instanceof SC.Error)) {
+        return SC.T_ERROR;
+      } else if (item instanceof SC.Object) {
+        return SC.T_OBJECT;
       } else {
-        return SC.T_HASH ;
+        return SC.T_HASH;
       }
     }
 
-    return nativeType ;
+    return nativeType;
   },
 
   /**
@@ -304,7 +312,8 @@ SC.mixin(/** @scope window.SC.prototype */ {
   // GUIDS & HASHES
   //
 
-  guidKey: jQuery.expando || ("SproutCore" + ( SC.VERSION + Math.random() ).replace( /\D/g, "" )),
+  // Like jQuery.expando but without any risk of conflict
+  guidKey: "SproutCore" + ( SC.VERSION + Math.random() ).replace( /\D/g, "" ),
 
   // Used for guid generation...
   _guidPrefixes: {"number": "nu", "string": "st"},
@@ -731,6 +740,23 @@ SC.mixin(/** @scope window.SC.prototype */ {
     }
 
     return root ;
+  },
+
+  /**
+   Acts very similar to SC.objectForPropertyPath(), the only difference is
+   that it will throw an error when object can't be found.
+
+    @param {String} path the path
+    @param {Object} root optional root object.  window is used otherwise
+    @param {Integer} stopAt optional point to stop searching the path.
+    @returns {Object} the found object or throws an error.
+  */
+  requiredObjectForPropertyPath: function(path, root, stopAt) {
+    var o = SC.objectForPropertyPath(path, root, stopAt);
+    if(!o) {
+      throw path + " could not be found";
+    }
+    return o;
   }
 
 }); // end mixin

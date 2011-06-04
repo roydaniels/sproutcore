@@ -23,6 +23,13 @@ SC.Response = SC.Object.extend(
 /** @scope SC.Response.prototype */ {
 
   /**
+    Walk like a duck
+    
+    @type Boolean
+  */
+  isResponse: YES,
+  
+  /**
     Becomes true if there was a failure.  Makes this into an error object.
     
     @type Boolean
@@ -177,9 +184,9 @@ SC.Response = SC.Object.extend(
 
   /**
     @private
-    @deprecated
+    @deprecated Use body instead.
 
-    Alias for body. Provides compatibility with older code.
+    Alias for body.
 
     @type Hash|String
     @see #body

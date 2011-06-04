@@ -1,6 +1,175 @@
-
 CHANGE LOG FOR 1.6
 ==================
+
+1.6.0.rc.2
+----------
+* Fixed SC.PickerPane#modalPaneDidClick return values - Fixes #339
+* Fixed SC.Enumerable fallback for SC.RecordArray#find - Fixes #363
+* Added SC.requiredObjectForPropertyPath that throws an error when object can't be found
+* Make it possible for the handlebars helpers to generate tags other than <span>
+* Improved Observer Tests with better location (thx martoche)
+* Fixed disclosure positioning in Ace, fixes #457
+* Added backslash to prevent SASS comment interpolation warning
+* Allow for passing relative paths to #collection helper.
+* Further cleanup to TextField template multiline
+* Added isMultiline property to SC.TextField.
+* jQuery is now smart enough to take booleans for certain attributes
+* Stop using jQuery expando
+* Added unit tests for SC.ContainerView to verify it cleans up views that it instantiates.
+* SC.ContainerView will instantiate it's contentView if nowShowing is set with a string or class, however it was not cleaning up views when it was finished. Now it keeps track and cleans up when necessary.
+* Unit test for previous commit checking that the themeName got passed through to the buttons.
+* Allow you to set themeName on the AlertPane to also set the themeName on the buttons (which were previously stuck as 'capsule')
+* Unit test for previous commit adding controlSize to TabView + removed useless TabView methods test and left a warning unit test instead.
+* Whitespace + allow setting of controlSize
+* Comment typo forEachIndex is not a function in IndexSet
+* fix jQuery/SC conflict for events handeling add tryToPerform on SC.TextField
+* use prop instead of attr in SC.Checkbox replace SC.data with jQuery.data
+* remove more code : passing unit tests but fail in real app
+* upgrade to jquery 1.6 use jQuery.sub()
+* Minor adjustments for docs
+* fixed so that replace on ChildArray only notifies the part of the array that has actually changed
+* remove more code : passing unit tests but fail in real app
+* upgrade to jquery 1.6 use jQuery.sub()
+* Hacky solution to the issue where template collection views render their item views multiple times when they are nested inside another template collection view.
+* Adds support for specifying an inverse template name to template collection view.
+* Adds unit tests for using an inverse template in template collection views.
+* Fixes issue with nested template collection views causing childViews array to get messed up.
+* Adds failing unit test for childView structure of nested collection views.
+* Adds unit tests for checking the number of items rendered in nested collection views with default content.
+
+1.6.0.rc.1
+----------
+* Added 'Show Progress' checkbox to Test Runner
+* fixed the double call issue and changed the tests to reflect what really should go on.
+* Adds failing unit test that demonstrates child arrays not playing nicely with array observers.
+* TemplateCollectionView should not try to use a content object if it is not defined yet. Also pulls in Sven's fix to ensure that collections with custom tag names get the proper child tags.
+* Invoke Handlebars observers at the end of the run loop. This ensures that DOM updates happen as close together as possible.
+* Have Handlebars set up one-way bindings. This avoid potential cyclic bindings and is faster.
+* Fix for when a TemplateCollectionView's content changes multiple times before its layer is created.
+* Move around the stylesheets into its own framework.
+* Move resets to their own framework.
+* Adding in new CSS resets.
+* Use new spy framework in button test
+* Add ability to stub a method
+* add spies to test framework
+* On touch platforms, 'mousedown' & 'mouseup' were allowing default, but not tracking it for the later click event.  This resulted in 'click' calling preventDefault & stopPropagation
+* Attach prefix for core_tools' urls to allow to run apps on path other than /
+* Move sc-hidden class to be outside of sc-view.
+* Update deprecated SC.Button mixin to throw an error and changed the message.
+* Fixed SC.Button template view class / mixin conflict.
+* Don't call arrayContentDidChange() if storeKeys already exist; this will be handled by the next call to flush().
+* SC.ArrayController should setup and teardown property chains when its underlying content object changes.
+* Property chains should use objectAt in case they are used with array-likes instead of native arrays. Includes unit test of @each with SC.SparseArray.
+* Clarify error thrown when editing a record array without an underlying store keys array.
+* Remove sc-docs app and code as its been moved to the sproutcore/sc-docs repo
+* Fixes #400. SC.CheckboxView now triggers an action on mouseUp/touchEnd + unit tests updates
+* Fixed bug with ImageView.  Fixes SC #380.
+* Fixes #410. Scrolling in Opera is fixed.
+* Fixes #414. Allows SC.routes to handle passing only a function.
+* datastore/record_attribute: added tests for SC.DateTime to transform
+* datastore/record_attribute: added Date as a possible transform type for SC.DateTime
+* Fixes #434. Update checkbox & menu item PSDs to remove reduced saturation.
+* Moved touch event handling into the returned pane
+* Clean up some DataSource code and fix a failing test
+* datastore/data_source: fixed SC.DataSource returning incorrect values on commitRecords
+* Added MIXED_STATE to datastore
+* datastore/data_source: added more tests; fixed additional bug with return status of commitRecords
+* datastore/data_source: added tests for SC.DataSource
+* replace() and isEditable computed property had different behavior for editing when a RecordArray was not backed by an SC.Query. This commit updates isEditable to reflect the behavior of replace().
+* Have SC.RecordArray use the isEditable computed property instead of checking the query manually. This allows subclassers to implement consistent isEditable logic.
+* Improve documentation for SC.RecordArray#replace
+* Adds documentation for _scra_records property in record array.
+* Remove trailing spaces from record array.
+* Setting simulateTouchEvents before currentWindowSize has been set, will fail because simulateTouchEvents attempts to determine orientation using currentWindowSize.
+* Potential update to button view
+* SC.metricsForString() now also uses the 'letterSpacing' css property when calculating the size of a string
+* remove weird encoding test which breaks abbot
+* Small tweak
+* improve markdown parsing and @link tags in the docs
+* Updated documentation for sc-docs command
+* Updated documentation for sc-docs command
+* Add dependencies
+* updated statechart docs
+* fixed docs for render_delegate.js
+* fixed handling of mouseDown and mouseUp when isSelectable is NO
+* fixed autoResize to copy classNames properly to the metrics element
+* fix RenderContext.element() to use SC.$ instead of a custom factory
+* Add flag to know when unit tests have finished running.
+* fixed measureString and metricsForString to actually respect when ignoreEscape is YES
+* fixed container to create child using createChildView
+* Removing strings.js file. No loc files should be in the framework unless is a very special case
+* Rename all english.lproj directories inside sproutcore to resources
+* SC.Logger.stringifyRecordedMessages broken
+* Made the list view styling use chance
+* Make sure not to call notifiers twice if the server's response status was 0
+* Fixed all unit tests that were failing in IE. All the failing tests had to do with exiting and entering concurrent states. Issue was addressed using the updated SC.StatechartSequenceMatcher
+* Refactored and updated SC.StatechartSequenceMatcher's functionality. It's now more flexible in how you construct sequences and how those sequences are matched
+* Refactored some logic in the SC.StatechartMonitor class
+* Refactored statechart code so that classes and class extensions are placed into their own respective files
+* Updated SproutCore's Buildfile so that the statechart framework is part of the sproutcore wrapper framework
+* Segment view changes for handling layerId
+* Refactoring code in layerid code for menu
+* support for layerId in Menu pane and Segment view.
+* Added the sc-docs directory to the apps folder which includes the sc-docs command, the jsdoc-toolkit, and the new doc viewer app
+* expanded view-related documentaiton
+* Fixed view-related documentation
+* Fix for loc(). Adding back to String.prototype, Talk to me if you have any problems with this commit
+* Update for incorrect label view documentation
+* fixed a bug with the SC.State.plugin logic. Now checks the klass variable if null
+* updated SC.StatechartManager's tracing output
+* removed code from statechart framework. Code was acting as a temporary stop-gap that is no longer needed. Was also causing unit tests to fail.
+* Respect the new touch_enabled flag (defaults to true)
+* fix to measure views when the become visible
+* fixed bug which caused all non-webkit browsers to be treated like old safari versions
+* fixed rows not having a default height - this fixes the test controls infinite loop
+* Calculate minWidth/Height correctly.
+* Perf tweaks for unit tests runner
+* Make the unit test run faster by dumping results only until the end
+* Temporary fix to select button
+* Fixing the broken loc() function.
+* Refactoring css core code. This change packs all .sc-view css rules into one. Also sets the default font on the body of the page instead of reapplying the rule in every view, this change might break some styling for some apps. Contact me if you have any doubts
+* Disabling image preloading by default
+* Fix the html examples of the routes file
+* Fix documentation for SC.routes
+* Fix problem with last merge
+* Refactor base css styles to use SCSS
+* Update to trimming functions
+* Minor unit test bug fixes for IE
+* Fixing SC.offset support for IE
+* Adding trim functions only for IE
+* Fixing trailing commas, and minor bugs related to IE. Also moved trim functions for strings back into core_foundation as IE doesn't support them, finally changes the icons library to use chance for slicing
+* Fix up SC.PopupButtonView a bit
+* Revert "Revert "fixed gotoState to pick a better default fromCurrentState when a statechart has concurrent states""
+* fixed to respect escapeHTML property
+* Move BindableSpan to core_foundation/views as system shouldn't depend on TemplateView
+* Clean up global leaks
+* improved documentation for previousValidKeyView and nextValidKeyView
+* added tests for previousValidKeyView
+* added test for parentView.lastKeyView priority over nextKeyView
+* fixed next and previous to respect last and first, cleaned up while loops end condition
+* Made changes to _supportsPlaceHolder function to make it work with Firefox4
+* changed conditions for newRowPending code to handle the first child having startsNewRow correctly
+* fixed bug in dealing with batchResizeId changing and stopped views that aren't visible from being measured
+* fixed event passing for blur event
+* fixed window leak
+* removed debug code
+* added tab functionality for selectButton since it has acceptsFirstResponder: YES
+* fixed previousValidKeyView and cleaned up nextValidKeyView
+* added some more warnings about correct usage to docs
+* added tests for nextValidKeyView
+* made pane.makeFirstResponder actually call responderContext.makeFirstResponder; this fixes hasFirstResponder not being set properly
+* added more doc
+* fixed bug in lastKeyView calculation, renamed private methods, and added documentation
+* fixed default tab behavior in certain corner cases and added optional properties to make tab order easier for views that tab in a different order from their childViews order
+* fixed firstResponder being set to null when a view resigns first responder
+* Added support for attachIdentifyingHeaders to SC.Request so we can opt out of having custom headers set on each SC.Request
+* updated styling for list views
+* Get rid of 'uninitialized property' warning since it didn't really make
+* If no listener handled a response, don't try twice if the base status is the same as the status.
+* Fixed a bug with the support for notifying multiple listeners on a single status.
+* Added unit test for multiple notifiers on a single status support in SC.Request
+* Added support in SC.Request and SC.Response for multiple listeners per status
+
 
 1.6.0.beta.3
 ------------

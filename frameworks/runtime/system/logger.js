@@ -132,7 +132,7 @@ SC.LOGGER_LEVEL_NONE  = 'none';
   functions, such as defining groups.
 
   The FireFox plugin Firebug was used as a function reference. Please see
-  {@link <a href="http://getfirebug.com/logging.html">Firebug Logging Reference</a>}
+  [Firebug Logging Reference](http://getfirebug.com/logging.html)
   for further information.
 
   @author Colin Campbell
@@ -258,7 +258,7 @@ SC.Logger = SC.Object.create(
     If this property is set to YES, it will set 'logOutputLevel' to
     SC.LOGGER_LEVEL_DEBUG.  Otherwise, it will have no effect.
 
-    @deprecated
+    @deprecated Set the log level instead.
     @property: {Boolean}
   */
   debugEnabled: NO,

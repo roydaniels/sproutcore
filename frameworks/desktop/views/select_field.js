@@ -9,11 +9,14 @@
 /**
   @class
 
+  DEPRECATED. Use SelectView instead.
+
   SelectFieldView displays browser-native popup menu.  To use this view,
   you should either bake into the HTML the preset list of options, or 
   you can set the -objects property to an array of items to show.  The
   value is current value of the select.
-  
+
+  @deprecated
   @extends SC.FieldView
   @author Charles Jolley
   @author Mike Ball
@@ -165,7 +168,8 @@ SC.SelectFieldView = SC.FieldView.extend(
 
   /** @private */
   render: function(context, firstTime) {
-    if (this.get('cpDidChange')) {
+    // Only re-render if it's the firstTime or if a change is required
+    if (firstTime || this.get('cpDidChange')) {
       this.set('cpDidChange', NO);
       // get list of objects.
       var nameKey = this.get('nameKey') ;
@@ -260,7 +264,7 @@ SC.SelectFieldView = SC.FieldView.extend(
         this.set('value',null);
       }
     } else {
-      this.$().attr('disabled', this.get('isEnabled') ? null : 'disabled');
+      this.$().prop('disabled', !this.get('isEnabled'));
     }
   },
 
